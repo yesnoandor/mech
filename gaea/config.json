@@ -1,0 +1,121 @@
+{
+  "module_server": {
+    "ip": "",
+    "port": 9999
+  },
+
+  "can_server": {
+    "protocol": "echo",
+
+    "can_analyze": {
+      "vendor_id": "0x0000",
+      "product_id": "0x0000"
+    },
+
+    "can_module": {
+      "CAN1": {
+        "tx_id": "0x160",
+        "rx_id": "0x161"
+      },
+      "CAN2": {
+        "tx_id": "0x1A0",
+        "rx_id": "0x1A1"
+      },
+      "CAN3": {
+        "tx_id": "0x1E0",
+        "rx_id": "0x1E1"
+      },
+      "CAN4": {
+        "tx_id": "0xB0",
+        "rx_id": "0xB1"
+      },
+      "CAN5": {
+        "tx_id": "0x2A5",
+        "rx_id": "0x2A6"
+      },
+      "CAN6": {
+        "tx_id": "0x74",
+        "rx_id": "0x75"
+      },
+      "CAN7": {
+        "tx_id": "0x8D",
+        "rx_id": "0x8E"
+      },
+      "CAN8": {
+        "tx_id": "0x80",
+        "rx_id": "0x81"
+      },
+      "CAN9": {
+        "tx_id": "0x90",
+        "rx_id": "0x91"
+      }
+    }
+  },
+
+  "serial_server": {
+    "device": "/dev/ttyUSB0",
+    "bps": "115200",
+
+    "protocol": "echo",
+
+    "power": {
+      "1": {
+        "sequence": ["start", 2, "stop", 3, "start", 5, "stop"]
+      },
+      "2": {
+        "sequence": ["start", 2, "stop", 3, "start", 5, "stop"]
+      },
+      "3": {
+        "loop": ["start", 2, "stop", 3]
+      },
+      "4": {
+        "loop": ["start", 2, "stop", 3]
+      }
+    }
+  },
+
+  "devices_info": {
+    "#1": {
+      "TC397": {
+        "ip": "127.0.0.1",
+        "modules_monitor": {
+          "MODULE_CAN": [
+            "EMC_MODULE_CAN0",
+            "EMC_MODULE_CAN1",
+            "EMC_MODULE_CAN2",
+            "EMC_MODULE_CAN3",
+            "EMC_MODULE_CAN4",
+            "EMC_MODULE_CAN5",
+            "EMC_MODULE_CAN6"
+          ],
+          "MODULE_ADC": [
+            "EMC_MODULE_ADC0",
+            "EMC_MODULE_ADC1",
+            "EMC_MODULE_ADC2",
+            "EMC_MODULE_ADC3",
+            "EMC_MODULE_ADC4",
+            "EMC_MODULE_ADC5",
+            "EMC_MODULE_ADC6",
+            "EMC_MODULE_ADC7"
+          ],
+          "MODULE_SENSOR": [
+            "EMC_MODULE_SENSOR_INA",
+            "EMC_MODULE_SENSOR_TMP0",
+            "EMC_MODULE_SENSOR_TMP1",
+            "EMC_MODULE_SENSOR_TMP2",
+            "EMC_MODULE_SENSOR_TMP3"
+          ]
+        }
+      },
+      "H3": {
+        "ip": "192.168.1.101",
+        "modules_monitor": {
+          "MODULE_CAN": [
+            "EMC_MODULE_CAN8",
+            "EMC_MODULE_CAN9"
+          ]
+        }
+      }
+    }
+  }
+}

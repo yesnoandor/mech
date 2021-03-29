@@ -39,14 +39,10 @@ Created on
 """
 
 
-import wx
 import os
-
 import threading
-from pubsub import pub
-from utils.bytes import print_bytes, bytesToHexString
-from utils.crc import crc8
 from queue import Queue
+from utils.logger import SingleLogger
 from hw.canfd import CanAnalyze_ZLG
 from protocol.ModuleProtocol import *
 from gaea.config import system_params
@@ -63,7 +59,7 @@ class CANServerThread(threading.Thread):
         super().__init__(name=name)         # 调用父类(超类)的__init__()方法
 
         # 初始化日志类
-        # self.__logger = Logger('log/mech.log', logging.DEBUG, logging.ERROR)
+        self.__logger = SingleLogger()
 
         # 外部通讯参数
         self.__queue = data                 # 用于向外部传输队列数
@@ -88,6 +84,7 @@ class CANServerThread(threading.Thread):
 
         # 获取CAN服务器的运行方式
         self.__policy = self.__system_config.get_can_protocol()
+        self.__logger.debug("can protocol = %s" % self.__policy)
 
         # 服务器不同的协议处理方式
         self.__canfd_protocol_treat = {"echo": self.echo, "monitor": self.monitor, "uds": self.uds}
@@ -103,18 +100,18 @@ class CANServerThread(threading.Thread):
         self.state = 'idle'
 
     def __del__(self):
-        print("__del__")
+        self.__logger("__del__")
 
     def pause(self):
-        print("pause CAN server thread!")
+        self.__logger("pause CAN server thread!")
         self.__flag.clear()         # 设置为False, 让线程阻塞
 
     def resume(self):
-        print("resume CAN server thread!")
+        self.__logger("resume CAN server thread!")
         self.__flag.set()           # 设置为True, 让线程停止阻塞
 
     def stop(self):
-        print("stop CAN server thread!")
+        self.__logger("stop CAN server thread!")
         self.__flag.set()           # 将线程从暂停状态恢复, 如何已经暂停的话
         self.__running.clear()      # 设置为False
 

@@ -8,8 +8,8 @@
     "protocol": "echo",
 
     "can_analyze": {
-      "vendor_id": "0x0000",
-      "product_id": "0x0000"
+      "vendor_id": "0x04cc",
+      "product_id": "0x1240"
     },
 
     "can_module": {

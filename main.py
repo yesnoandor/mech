@@ -51,11 +51,6 @@ from server.CanServer import CANServerThread
 if __name__ == '__main__':
     single_logger = SingleLogger()
     single_logger.info('--主线程开始--')
-    single_logger.debug('debug')
-    single_logger.info('info')
-    single_logger.warning('warning')
-    single_logger.error('error')
-    single_logger.critical('critical')
 
     app = MechIIApp()
 
@@ -63,15 +58,15 @@ if __name__ == '__main__':
     event = threading.Event()
 
     # 创建Module Server独立线程
+    single_logger.info("Module Server Start...")
     module_server_thread = ModuleServerThread("ModuleServer", queue, event)
     module_server_thread.start()
 
     # 创建CAN Server独立线程
     system_config = system_params()
     vid, pid = system_config.get_can_analyzer_info()
-    print("pid = ", pid)
-    print("vid = ", vid)
     if vid != 0 and pid != 0:
+        single_logger.info("CAN Server Start...")
         can_server_thread = CANServerThread("CANServer", queue, event)
         can_server_thread.start()
 

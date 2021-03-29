@@ -63,6 +63,7 @@ class ModuleServerHandler(BaseRequestHandler):
     start_flag = False
     msg = bytearray()
 
+
     def setup(self):
         """
         每一个连接建立后的初始化
@@ -77,7 +78,9 @@ class ModuleServerHandler(BaseRequestHandler):
         #
         # wx.CallAfter(pub.sendMessage, 'socket_setup_event', ip=self.client_address[0])
 
-        print('socket(%s) setup!' % self.client_address[0])
+        # print('socket(%s) setup!' % self.client_address[0])
+        single_logger = SingleLogger()
+        single_logger.info('socket(%s) setup!' % self.client_address[0])
 
     def finish(self):
         """
@@ -94,7 +97,9 @@ class ModuleServerHandler(BaseRequestHandler):
         del g_conn_pool[self.client_address[0]]             # 清除连接池中当前socket句柄
         del g_protocol_pool[self.client_address[0]]         # 清除协议对象池中当前协议对象
 
-        print('socket(%s) finish!' % self.client_address[0])
+        # print('socket(%s) finish!' % self.client_address[0])
+        single_logger = SingleLogger()
+        single_logger.info('socket(%s) finish!' % self.client_address[0])
 
     def handle(self):
         """
@@ -174,6 +179,9 @@ class ModuleServerThread(threading.Thread):
     def __init__(self, name, data, event):
         super().__init__(name=name)         # 调用父类(超类)的__init__()方法
 
+        # 初始化日志类
+        self.__logger = SingleLogger()
+
         # 外部通讯参数
         self.__queue = data                 # 用于向外部传输队列数
         self.__event = event                # 用于触发外部事件
@@ -188,26 +196,22 @@ class ModuleServerThread(threading.Thread):
         system_config = system_params()
         self.__ip, self.__port = system_config.get_module_server_info()
 
-        print("ip = ", self.__ip)
-        print("port = ", self.__port)
-
-        # 初始化日志类
-        self.__logger = SingleLogger()
-        self.__logger.info('--ModuleServerThread--')
+        self.__logger.debug("ip = %s" % self.__ip)
+        self.__logger.debug("port = %s" % self.__port)
 
     def __del__(self):
-        print("__del__")
+        self.__logger.info("__del__")
 
     def pause(self):
-        print("pause module server thread!")
+        self.__logger.info("pause module server thread!")
         self.__flag.clear()         # 设置为False, 让线程阻塞
 
     def resume(self):
-        print("resume module server thread!")
+        self.__logger.info("resume module server thread!")
         self.__flag.set()           # 设置为True, 让线程停止阻塞， 继续运行
 
     def stop(self):
-        print("stop module server thread!")
+        self.__logger.info("stop module server thread!")
         self.__flag.set()           # 将线程从暂停状态恢复, 如何已经暂停的话
         self.__running.clear()      # 设置为False
 

@@ -46,6 +46,7 @@ import logging
 import threading
 # from utils.logger import Logger
 from ctypes import CDLL, sizeof
+from utils.logger import SingleLogger
 from hw.ZLG_Struct import *
 from copy import deepcopy
 from pyudev.wx import MonitorObserver, EVT_DEVICE_EVENT
@@ -53,26 +54,19 @@ from pyudev import Context, Monitor
 
 
 class CanAnalyze:
+    """
+    CAN分析仪基类
+    """
     def __init__(self, vendor_id, product_id):
         # 初始化日志类
-        # self._logger = Logger('log/mech.log', logging.DEBUG, logging.DEBUG)
+        self.__logger = SingleLogger()
 
-        self._vendor_id = vendor_id
-        self._product_id = product_id
-        self._canfd_devices = []        #
-
-        self._device_number = self.scan_devices(vendor_id, product_id)
+        # CAN分析仪参数
+        self.__vendor_id = vendor_id
+        self.__product_id = product_id
+        self._canfd_devices = []                    # CAN 分析仪列表
+        self._device_number = self.scan_devices(vendor_id, product_id)      # CAN分析仪的个数
         pass
-
-    def get_info(self):
-        pass
-
-    def send(self, data):
-        pass
-
-    def recv(self, len=64):
-        data = []
-        return data
 
     def scan_devices(self, vendor_id, product_id):
         """
@@ -85,28 +79,24 @@ class CanAnalyze:
         if devices is None:
             raise ValueError('CAN Device not found')
 
-        # print(type(devices))
-        # print(devices)
         for device in devices:
             if (device.idVendor == vendor_id) & (device.idProduct == product_id):
                 self._canfd_devices.append(device)
-            # print(type(device))
-            # print(device)
 
-        print("device number = ", len(self._canfd_devices))
-        print(self._canfd_devices[0].idVendor)
-        print(type(self._canfd_devices))
-        #print(self._canfd_devices[0].get_active_configuration())
-
-        print(len(self._canfd_devices))
         return len(self._canfd_devices)
 
     def get_device_number(self):
-        return len(self._canfd_devices)
+        return self._device_number
 
 
 class CanAnalyze_ZLG(CanAnalyze):
+    """
+    周立功CAN分析仪类
+    """
     def __init__(self, vendor_id, product_id):
+        # 初始化日志类
+        self.__logger = SingleLogger()
+
         super().__init__(vendor_id, product_id)
 
         self._canfd_so = "hw/libusbcanfd.so"        # CANFD动态库名称
@@ -155,19 +145,16 @@ class CanAnalyze_ZLG(CanAnalyze):
         for sn, can_info in self._canfd_devices_info.items():
             print("%s : %d " % (sn, can_info['index']))
 
-
     def GetDevicesInfo(self):
         """
         获取CAN分析仪的设备信息
         :return:
         """
-
         canfd_devices_info = dict()
 
-
-        for num in range(0, self._device_number):
+        for num in range(0, self.get_device_number()):
             try:
-                print("num = ", num)
+                # print("num = ", num)
                 self._OpenDevice(num)
 
                 info = self._ReadDeviceInfo(num)
@@ -308,16 +295,16 @@ class CanAnalyze_ZLG(CanAnalyze):
                 self.Start(index, channel[0])
 
     def Start(self, index, chn):
-        print("Start...")
-        print("index = ", index)
-        print("chn = ", chn)
+        # print("Start...")
+        # print("index = ", index)
+        # print("chn = ", chn)
         init_info = self.GetInitInfo()
 
         self._InitCAN(index, chn, init_info)
         self._SetReference(index, chn, 0x18, c_int(1))      # 设置CANFD的波特率为
         self._StartCAN(index, chn)
         self._ClearBuffer(index, chn)
-        print("Start.....")
+        # print("Start.....")
         # self._ClearBuffer(card_index, chn)
         # self._canfd_devices_info[sn]["channel"][chn]['init'] = True
 
@@ -456,7 +443,7 @@ class CanAnalyze_ZLG(CanAnalyze):
         :return:
         """
         ret = self._canfd.VCI_OpenDevice(self._device_type, card_index, 0)
-        print("ret = ", ret)
+        # print("ret = ", ret)
         if ret != 1:
             raise Exception("Open device id {} failed!".format(str(card_index)))
 
@@ -487,14 +474,10 @@ class CanAnalyze_ZLG(CanAnalyze):
         :param card_index: 设备索引号
         :return:
         """
-        print("read device info +++++")
-
         device_info = ZCAN_DEV_INF()
         if self._canfd.VCI_ReadBoardInfo(self._device_type, card_index, byref(device_info)) != 1:
             raise Exception("Can't get device info from {}".format(str(card_index)))
 
-        print(device_info)
-        print("read device info -----")
         return device_info
 
     def _ReadDeviceErrInfo(self, card_index, channel):

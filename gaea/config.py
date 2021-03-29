@@ -41,6 +41,7 @@ Created on
 import os
 import json
 from utils.json import *
+from utils.logger import SingleLogger
 from gaea.default import DEFAULT_SYSTEM_CONFIG
 
 
@@ -49,7 +50,7 @@ class system_params:
     系统默认配置
     """
     def __init__(self, file="gaea/config.json"):
-        # self.__logger = Logger('log/mech.log', logging.DEBUG, logging.DEBUG)
+        self.__logger = SingleLogger()
 
         self._cfg = DEFAULT_SYSTEM_CONFIG
         path = os.getcwd() + "/" + file
@@ -106,7 +107,7 @@ class system_params:
         return devices_info
 
     def get_can_protocol(self):
-        print("can server protocol = %s" % self._cfg['can_server']['protocol'])
+        # print("can server protocol = %s" % self._cfg['can_server']['protocol'])
         return self._cfg['can_server']['protocol']
 
     def get_can_analyzer_info(self):

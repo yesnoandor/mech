@@ -48,6 +48,7 @@ import binascii
 from utils import const
 from utils.bytes import *
 from utils.crc import *
+from utils.logger import SingleLogger
 from hw.devices import DevicesInfo
 from random import choice
 from random import random
@@ -87,7 +88,7 @@ class ModuleProtocol:
         self.__uuid = ""
 
         # 初始化日志类
-        # self.__logger = Logger('log/mech.log', logging.ERROR, logging.ERROR)
+        self.__logger = SingleLogger()
 
         # 初始化设备日志
         self.__device_logger = None
@@ -387,7 +388,7 @@ class ModuleProtocol:
 
             if self.__device_logger is None:
                 log_dir = "log/" + self.__uuid
-                print("log dir = ", log_dir)
+                # print("log dir = ", log_dir)
                 self.__device_logger = db_file(log_dir)
 
             if devices_info.devices_ready():
@@ -431,15 +432,16 @@ class ModuleProtocol:
                     log = v
                 if k == "date":
                     timestamp = v
-            print("type name =", type(name))
-            print("name = ", name)
-            print("log = ", log)
-            print("status = ", status)
-            print("timestamp = ", timestamp)
 
-            # self.__logger.info("name = {}".format(name))
-            # self.__logger.info("log = {}".format(log))
-            # self.__logger.info("status = {}".format(status))
+            # print("name = ", name)
+            # print("log = ", log)
+            # print("status = ", status)
+            # print("timestamp = ", timestamp)
+
+            self.__logger.debug("name = %s" % name)
+            self.__logger.debug("log = %s" % log)
+            self.__logger.debug("status = %s" % status)
+            self.__logger.debug("timestamp = %s" % timestamp)
 
             wx.CallAfter(pub.sendMessage, self.__pub_module_info_msg_name, uuid=self.__uuid, name=name, log=log, status=status, time=timestamp)
 

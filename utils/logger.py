@@ -40,14 +40,15 @@ Created on
 
 
 import os
-import sys
 import logging
 import colorlog
 
 
 class logger(logging.Logger):
     """
-
+    日志管理类
+        1. 支持console和文件双输出
+        2. console支持多颜色输出
     """
     def __init__(self):
         # 默认的日志路径和名字
@@ -93,6 +94,9 @@ class logger(logging.Logger):
 
 
 class SingleLogger:
+    """
+    单例模式的日志管理
+    """
     __instance = None
 
     def __init__(self):

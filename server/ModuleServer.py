@@ -50,6 +50,7 @@ from socketserver import ThreadingTCPServer, TCPServer, BaseRequestHandler
 from protocol.ModuleProtocol import *
 from gaea.config import system_params
 from utils.bytes import *
+from utils.logger import SingleLogger
 from hw.devices import DevicesInfo
 from ui.MechIIViewer import MechIIViewer
 
@@ -191,7 +192,8 @@ class ModuleServerThread(threading.Thread):
         print("port = ", self.__port)
 
         # 初始化日志类
-        # self.__logger = Logger('log/mech.log', logging.DEBUG, logging.DEBUG)
+        self.__logger = SingleLogger()
+        self.__logger.info('--ModuleServerThread--')
 
     def __del__(self):
         print("__del__")

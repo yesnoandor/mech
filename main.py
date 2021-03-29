@@ -40,6 +40,8 @@ Created on
 
 from queue import Queue
 import threading
+from utils.logger import logger
+from utils.logger import SingleLogger
 from gaea.config import system_params
 from ui.MechIIApp import MechIIApp
 from server.ModuleServer import ModuleServerThread
@@ -47,6 +49,14 @@ from server.CanServer import CANServerThread
 
 
 if __name__ == '__main__':
+    single_logger = SingleLogger()
+    single_logger.info('--主线程开始--')
+    single_logger.debug('debug')
+    single_logger.info('info')
+    single_logger.warning('warning')
+    single_logger.error('error')
+    single_logger.critical('critical')
+
     app = MechIIApp()
 
     queue = Queue()

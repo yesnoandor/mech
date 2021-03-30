@@ -46,6 +46,7 @@ from pubsub import pub
 from ui.MechIIEvent import *
 from ui.LoggerView import LoggerFrame
 from hw.devices import DevicesInfo
+from utils.logger import SingleLogger
 from db.sql import db_sql
 
 
@@ -53,7 +54,8 @@ class ModuleList(wx.ListCtrl):
     def __init__(self, *args, **kwargs):
         super(ModuleList, self).__init__(*args, **kwargs)
 
-        print("ModulePanel ++++++")
+        # 初始化日志类
+        self.__logger = SingleLogger()
 
         # 创建数据库管理类
         self.__sql = db_sql()
@@ -69,7 +71,9 @@ class ModuleList(wx.ListCtrl):
         # 默认的焦点设备，节点和设备的uuid
         devices_info = DevicesInfo()
         devices = devices_info.get_devices_name()
-        print(devices)
+        self.__logger.debug("all devices list = {}".format(devices))
+
+        #
         self.__focus_device = list(devices.keys())[0]
         self.__focus_node = devices[self.__focus_device][0]
         self.__focus_uuid = devices_info.get_uuid()[0]
@@ -98,8 +102,6 @@ class ModuleList(wx.ListCtrl):
         # 订阅消息 (module信息传输触发事件消息)
         self.__pub_module_info_msg_name = 'module_info_event'
         pub.subscribe(self.OnReceiveModuleEvent, self.__pub_module_info_msg_name)
-
-
 
         # 绑定公共事件处理
         self.Bind(wx.EVT_LIST_ITEM_SELECTED, self.OnItemSelected)
@@ -135,7 +137,7 @@ class ModuleList(wx.ListCtrl):
         module_name = item_name.GetText()
         # 获取当前item第二列的文本内容
         # item_log = self.GetItem(item_index, 1)
-        #module_log = item_log.GetText()
+        # module_log = item_log.GetText()
 
         path = "log" + os.sep + self.__focus_uuid
 
@@ -165,7 +167,6 @@ class ModuleList(wx.ListCtrl):
         :param item: 一条行记录 (name, log)
         :return: None
         """
-        # print("Add Item +++++++++++")
         name = item[0]
         log = item[1]
         index = self.InsertItem(sys.maxsize, name)
@@ -186,8 +187,6 @@ class ModuleList(wx.ListCtrl):
         # print("monitor modules list = ", self._monitor_modules_list)
         # print("monitor module max state = ", self._monitor_modules_max_state)
         # print("monitor module log = ", self._monitor_modules_log)
-
-        # print("Add Item -----------")
         return index
 
     def UpdateItemStatus(self, name, status):
@@ -235,23 +234,25 @@ class ModuleList(wx.ListCtrl):
         :param evt:
         :return:
         """
-        print("OnNodeShow in ModuleList Panel")
-        print("name = ", evt.name)
-        print("focus_uuid = ", self.__focus_uuid)
-        if self.__focus_uuid != evt.name:
+        self.__logger.info("Switch Node = {} --> {}".format(self.__focus_node, evt.name))
+        # print("focus_uuid = ", self.__focus_uuid)
+
+        #
+        if self.__focus_node != evt.name:
             if self.DeleteAllItems() is not True:
-                print("error in DeleteAllItems")
+                self.__logger.error("error in DeleteAllItems")
             else:
-                print("ok in DeleteAllItems")
+                self.__logger.debug("ok in DeleteAllItems")
 
             devices_info = DevicesInfo()
-            print(devices_info.get_uuid())
+            # print(devices_info.get_uuid())
             for uuid in devices_info.get_uuid():
                 if uuid[-4:] == evt.name[-4:]:
-                    print("match evt.name and uuid", uuid[-4:], evt.name[-4:])
+                    # print("match evt.name and uuid", uuid[-4:], evt.name[-4:])
                     # print("modules list = ", self._monitor_modules[uuid])
                     # print("monitor_modules = ", self._monitor_modules)
-                    print("monitor modules list = ", self._monitor_modules_list)
+                    # print("monitor modules list = ", self._monitor_modules_list)
+                    self.__logger.debug("monitor modules list = {}".format(self._monitor_modules_list))
                     # print("monitor modules log = ", self._monitor_modules_log)
                     # print("monitor modules max state = ", self._monitor_modules_max_state)
 
@@ -304,17 +305,25 @@ class ModuleList(wx.ListCtrl):
     def OnReceiveModuleEvent(self, uuid, name, log, status, time):
         """
         接收监控Module的信息，并刷新界面
+        :param uuid:
         :param name:
         :param log:
         :param status:
+        :param time:
         :return:
         """
+        self.__logger.debug("uuid = {}".format(uuid))
+        self.__logger.debug("name = {}".format(name))
+        self.__logger.debug("log = %s" % log)
+        self.__logger.debug("status = %s" % status)
+        self.__logger.debug("timestamp = %s" % time)
+
         # print("self uuid = ", self.__focus_uuid)
-        print("uuid = ", uuid)
-        print("name = ", name)
-        print("log = ", log)
-        print("status = ", status)
-        print("time = ", time)
+        # print("uuid = ", uuid)
+        # print("name = ", name)
+        # print("log = ", log)
+        # print("status = ", status)
+        # print("time = ", time)
 
         if name not in self._monitor_modules_list[uuid].keys():
             self.__sql.create_table(uuid=uuid, name=name)

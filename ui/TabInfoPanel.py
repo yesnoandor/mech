@@ -43,6 +43,7 @@ from wx.lib import buttons
 from ui.MechIIEvent import *
 from ui.TabPanel import TabPanel
 from ui.MenuPopup import MenuPopup
+from utils.logger import SingleLogger
 
 
 class TabInfoPanel(wx.Panel):
@@ -51,6 +52,9 @@ class TabInfoPanel(wx.Panel):
     """
     def __init__(self, nodes, focus_node, *args, **kwargs):
         super(TabInfoPanel, self).__init__(*args, **kwargs)
+
+        # 初始化日志类
+        self.__logger = SingleLogger()
 
         self.tab_panels = {}
         self.focus_node =focus_node
@@ -92,9 +96,7 @@ class TabInfoPanel(wx.Panel):
         :param evt:
         :return:
         """
-        print("OnNodeShow in TabInfoPanel")
-        print(self.focus_node)
-        print(evt.name)
+        self.__logger.info("Switch Node = {} --> {}".format(self.focus_node, evt.name))
 
         if self.focus_node != evt.name:
             panel = self.tab_panels[self.focus_node]

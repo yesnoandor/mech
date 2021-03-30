@@ -49,7 +49,6 @@ class ModulePanel(wx.Panel):
     """
     def __init__(self, *args, **kwargs):
         super(ModulePanel, self).__init__(*args, **kwargs)
-        print("ModulePanel ++++++")
 
         # 创建一个容器，容器中的控件横向排列
         self.box = wx.BoxSizer(wx.HORIZONTAL)

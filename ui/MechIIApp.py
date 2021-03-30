@@ -77,7 +77,6 @@ class MechIIApp(wx.App):
 
 if __name__ == '__main__':
     os.chdir("../")
-    print(os.getcwd())
 
     app = MechIIApp()
     app.MainLoop()

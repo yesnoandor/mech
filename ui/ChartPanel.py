@@ -45,6 +45,7 @@ from ui.MechIIEvent import *
 from wx.lib import scrolledpanel
 from ui.SystemInfoPanel import SystemInfoPanel
 from ui.DiagramInfoPanel import DiagramInfoPanel
+from utils.logger import SingleLogger
 from hw.devices import DevicesInfo
 
 
@@ -55,7 +56,8 @@ class ChartPanel(wx.Panel):
     def __init__(self, focus_node, *args, **kwargs):
         super(ChartPanel, self).__init__(*args, **kwargs)
 
-        self.focus_node = focus_node
+        # 初始化日志类
+        self.__logger = SingleLogger()
 
         self.sizer = wx.BoxSizer(wx.VERTICAL)
         self.SetSizer(self.sizer)
@@ -70,7 +72,7 @@ class ChartPanel(wx.Panel):
         self.SetBackgroundColour((200, 200, 200))
 
         self.system_info = {}
-
+        self.focus_node = focus_node
         self.non_decimal = re.compile(r'[^\d.]+')
 
         # 订阅消息
@@ -90,19 +92,24 @@ class ChartPanel(wx.Panel):
         :param evt:
         :return:
         """
-        print("OnNodeShow in ChartPanel")
-        print("evt name = ", evt.name)
+        self.__logger.info("Switch Node = {} --> {}".format(self.focus_node, evt.name))
+
         if self.focus_node != evt.name:
             self.focus_node = evt.name
 
             uuid = self.focus_node[-4:]
 
-            # 刷新设备性能信息
-            print(self.system_info)
+            # 计算cpu核数
             cpu_core = len(self.system_info[uuid]["cpu"].keys())
-            print("system info : cpu core = ", cpu_core)
-            memory_percent = "48"
+            self.__logger.debug("cpu core = {}".format(cpu_core))
 
+            # 计算内存占有率
+            total = int(self.system_info[uuid]['memory']['total'][:-1])
+            used = int(self.system_info[uuid]['memory']['used'][:-1])
+            memory_usage = (used * 100) // total
+            self.__logger.debug("memory usage = {}".format(memory_usage))
+
+            # 计算网络速率
             network_tx = float(self.non_decimal.sub('', self.system_info[uuid]["network"]["tx"]))
             if self.system_info[uuid]["network"]["tx"][-1] == 'M':
                 network_tx * 1024
@@ -117,11 +124,11 @@ class ChartPanel(wx.Panel):
             #network_tx = float(self.system_info[uuid]["network"]["tx"])
             #network_rx = float(self.system_info[uuid]["network"]["rx"])
 
-
+            # 刷新设备性能信息
             evt = PerformanceInfoEvent(
                 uptime=self.system_info[uuid]["uptime"],
                 temperature=self.system_info[uuid]["temperature"],
-                memory=memory_percent,
+                memory=memory_usage,
                 network=network_total,
                 cpu=cpu_core
             )
@@ -138,8 +145,8 @@ class ChartPanel(wx.Panel):
 
             # 刷新设备CPU图表
             if self.system_info[uuid]["cpu"]:
-                print("labels = ", self.system_info[uuid]["cpu"].keys())
-                print("values = ", self.system_info[uuid]["cpu"].values())
+                # print("labels = ", self.system_info[uuid]["cpu"].keys())
+                # print("values = ", self.system_info[uuid]["cpu"].values())
 
                 evt = CpuInfoEvent(
                     data=self.system_info[uuid]["cpu"].values(),
@@ -160,13 +167,13 @@ class ChartPanel(wx.Panel):
                 total = int(sizes[0])
                 used = int(sizes[1])
 
-                print("total = ", total)
-                print("used = ", used)
+                # print("total = ", total)
+                # print("used = ", used)
 
-                used_percent = (used * 100) // total
+                memory_usage = (used * 100) // total
 
-                memory_sizes.append(used_percent)
-                memory_sizes.append(100 - used_percent)
+                memory_sizes.append(memory_usage)
+                memory_sizes.append(100 - memory_usage)
 
                 evt = MemoryInfoEvent(
                     sizes=memory_sizes,
@@ -193,6 +200,17 @@ class ChartPanel(wx.Panel):
         :param info:
         :return:
         """
+        self.__logger.debug("sw version = %s" % info["version"]['sw'])
+        self.__logger.debug("hw version = %s" % info["version"]['hw'])
+        self.__logger.debug("temperature = %s" % info["temperature"])
+        self.__logger.debug("ip = %s" % info["ip"])
+        self.__logger.debug("uuid = %s" % info["uuid"])
+        self.__logger.debug("memory = %s" % info["memory"])
+        self.__logger.debug("cpu = %s" % info["cpu"])
+        self.__logger.debug("network = %s" % info["network"])
+        self.__logger.debug("uptime = %s" % info["uptime"])
+
+        """
         print("system info : sw version = ", info["version"]['sw'])
         print("system info : hw version = ", info["version"]['hw'])
         print("system info : temperature = ", info["temperature"])
@@ -203,19 +221,27 @@ class ChartPanel(wx.Panel):
         print("system info : network = ", info["network"])
         print("system info : uptime = ", info["uptime"])
         # print("system info : storage = ", info["storage"])
+        """
 
         uuid = info["uuid"][-4:]
-        print("focus node = ", self.focus_node[-4:])
-        print("uuid =", uuid)
+        self.__logger.debug("uuid = %s" % uuid)
+        self.__logger.debug("focus uuid = %s" % self.focus_node[-4:])
 
         self.system_info[uuid] = info               # 每个设备根据UUID保存一份系统信息
-        if uuid != self.focus_node[-4:]:
-            print("not focus node chart!")
+        if uuid != self.focus_node[-4:]:            # 不是当前焦点的uuid，则不显示系统信息
+            # print("not focus node chart!")
             return
 
-        # 刷新设备性能信息
+        # 计算CPU核数
         cpu_core = len(info["cpu"].keys())
-        memory_percent = "48"
+        self.__logger.debug("cpu core = %d" % cpu_core)
+
+        # 计算内存占有率
+        total = int(int(info["memory"]["total"][:-1]))
+        used = int(int(info["memory"]["used"][:-1]))
+
+        memory_usage = (used * 100) // total
+        self.__logger.debug("memory usage = %d" % memory_usage)
 
         network_tx = float(self.non_decimal.sub('', self.system_info[uuid]["network"]["tx"]))
         if self.system_info[uuid]["network"]["tx"][-1] == 'M':
@@ -233,7 +259,7 @@ class ChartPanel(wx.Panel):
         evt = PerformanceInfoEvent(
             uptime=info["uptime"],
             temperature=info["temperature"],
-            memory=memory_percent,
+            memory=memory_usage,
             network=network_total,
             cpu=cpu_core
         )
@@ -250,8 +276,8 @@ class ChartPanel(wx.Panel):
 
         # 刷新设备CPU图表
         if info["cpu"]:
-            print("labels = ", info["cpu"].keys())
-            print("values = ", info["cpu"].values())
+            # print("labels = ", info["cpu"].keys())
+            # print("values = ", info["cpu"].values())
 
             evt = CpuInfoEvent(
                 data=info["cpu"].values(),
@@ -272,13 +298,10 @@ class ChartPanel(wx.Panel):
             total = int(sizes[0])
             used = int(sizes[1])
 
-            print("total = ", total)
-            print("used = ", used)
+            memory_usage = (used * 100) // total
 
-            used_percent = (used * 100) // total
-
-            memory_sizes.append(used_percent)
-            memory_sizes.append(100 - used_percent)
+            memory_sizes.append(memory_usage)
+            memory_sizes.append(100 - memory_usage)
 
             evt = MemoryInfoEvent(
                 sizes=memory_sizes,
@@ -289,16 +312,12 @@ class ChartPanel(wx.Panel):
 
         # 刷新设备网络信息图表
         if info["network"]:
-            print("network++++++++++++++++++++++++++++++++")
-
             evt = NetworkInfoEvent(
                 tx=info["network"]["tx"],
                 rx=info["network"]["rx"]
             )
 
             wx.QueueEvent(self.diagram_info_panel.network_panel, evt)
-
-            print("network--------------------------------")
 
 
 if __name__ == '__main__':

@@ -93,7 +93,6 @@ class db_file:
         # print("mode = ", mode)
         path = self.__uuid + os.sep + module + '.log'
         # print("path = ", path)
-        # print('db_file :: read+++++++++')
         try:
             with open(path, 'r', encoding='utf-8') as f:
                 for line in f:
@@ -114,7 +113,6 @@ class db_file:
 
         except Exception as e:
             print(e)
-        print('db_file :: read----------')
 
 
 if __name__ == '__main__':

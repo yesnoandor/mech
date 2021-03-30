@@ -51,6 +51,7 @@ from ui.TabInfoPanel import TabInfoPanel
 from ui.DeviceInfoPanel import DeviceInfoPanel
 from ui.ChartPanel import ChartPanel
 from ui.MechIIEvent import *
+from utils.logger import SingleLogger
 
 
 class MechIIViewer(wx.Frame):
@@ -58,9 +59,13 @@ class MechIIViewer(wx.Frame):
     Mech-II 主窗体
     """
     def __init__(self, devices_info={}, focus_device='', focus_node='', UpdateFrame=None, *args, **kwargs):
-        self.UpdateFrame = UpdateFrame
-
         super(MechIIViewer, self).__init__(*args, **kwargs)
+
+        # 初始化日志类
+        self.__logger = SingleLogger()
+
+        # 更新主窗体方法，通过FrameManager类
+        self.UpdateFrame = UpdateFrame
 
         # 获取设备节点信息
         self.devices_info = devices_info
@@ -126,8 +131,9 @@ class MechIIViewer(wx.Frame):
         :param evt:
         :return:
         """
-        print("OnModuleShow in MechIIViewer")
-        print(evt.name)
+        self.__logger.info("Module View --> Chart View")
+        # print("OnModuleShow in MechIIViewer")
+        # print(evt.name)
 
         self.chart_panel.Hide()
         self.module_panel.Show()
@@ -141,8 +147,9 @@ class MechIIViewer(wx.Frame):
         :param evt:
         :return:
         """
-        print("OnChartShow")
-        print(evt.name)
+        self.__logger.info("Chart View --> Module View")
+        # print("OnChartShow")
+        # print(evt.name)
 
         self.module_panel.Hide()
         self.chart_panel.Show()

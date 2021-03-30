@@ -42,6 +42,7 @@ import wx
 from ui.MechIIEvent import *
 from ui.DevicePanel import DevicePanel
 from ui.NodePanel import NodePanel
+from utils.logger import SingleLogger
 
 
 class DeviceInfoPanel(wx.Panel):
@@ -50,6 +51,9 @@ class DeviceInfoPanel(wx.Panel):
     """
     def __init__(self, devices={}, focus_device='', focus_node='', *args, **kwargs):
         super(DeviceInfoPanel, self).__init__(*args, **kwargs)
+
+        # 初始化日志类
+        self.__logger = SingleLogger()
 
         self.devices_info = devices
         self.focus_device = focus_device
@@ -132,12 +136,11 @@ class DeviceInfoPanel(wx.Panel):
 
     def OnNodeShow(self, evt):
         """
-
+        切换设备信息区域的Node
         :param evt:
         :return:
         """
-        print("OnNodeShow in DeviceInfoPanel")
-        print(evt.name)
+        self.__logger.info("Switch Node = {} --> {}".format(self.focus_node, evt.name))
 
         if self.focus_node != evt.name:
             # 取消原来聚焦的device
@@ -172,12 +175,12 @@ class DeviceInfoPanel(wx.Panel):
 
     def OnDeviceShow(self, evt):
         """
-
+        切换设备信息区域的Device
         :param evt:
         :return:
         """
-        print("OnDeviceShow in  DeviceInfoPanel")
-        print(evt.name)
+        self.__logger.info("OnDeviceShow in  DeviceInfoPanel {}".format(evt.name))
+        # print(evt.name)
 
         children = self.sizer.GetChildren()
 

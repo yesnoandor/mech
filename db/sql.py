@@ -59,7 +59,7 @@ class db_sql:
                         state text,
                         date text
                         )''' % table_name
-        print("cmd = ", cmd)
+        # print("cmd = ", cmd)
         self.__sql.execute(cmd)
         pass
 

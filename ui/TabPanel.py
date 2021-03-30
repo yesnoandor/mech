@@ -40,6 +40,7 @@ Created on
 
 import wx
 from ui.MechIIEvent import *
+from utils.logger import SingleLogger
 
 
 class TabPanel(wx.Panel):
@@ -48,6 +49,9 @@ class TabPanel(wx.Panel):
     """
     def __init__(self, focus=False, tab='Charts', name='xxxx', *args, **kwargs):
         super(TabPanel, self).__init__(*args, **kwargs)
+
+        # 初始化日志类
+        self.__logger = SingleLogger()
 
         self.name = name
         self.focus = focus
@@ -110,10 +114,10 @@ class TabPanel(wx.Panel):
         :param focus: =True, 设置当前面板聚焦
         :return:
         """
-        print("name = ", self.name)
-        print("focus = ", focus)
-        print("self.focus = ", self.focus)
-        print("self.tab = ", self.tab)
+        # print("name = ", self.name)
+        # print("focus = ", focus)
+        # print("self.focus = ", self.focus)
+        # print("self.tab = ", self.tab)
         if self.focus != focus:
             if focus:
                 self.module_name.SetBackgroundColour((0xfe, 0xd3, 0x63))
@@ -181,7 +185,7 @@ class TabPanel(wx.Panel):
         :param event:
         :return:
         """
-        print("double click OnNodeName")
+        self.__logger.info("double click Node {}".format(self.name))
 
         # 向Device信息区域发送选中Node的信息
         evt = NodeEvent(
@@ -213,7 +217,7 @@ class TabPanel(wx.Panel):
         :param event:
         :return:
         """
-        print("double click OnModules")
+        self.__logger.info("Double click Chart --> Module")
 
         if not self.focus:
             return
@@ -240,7 +244,7 @@ class TabPanel(wx.Panel):
         :param event:
         :return:
         """
-        print("double click OnCharts")
+        self.__logger.info("Double click Module  --> Chart")
 
         if not self.focus:
             return

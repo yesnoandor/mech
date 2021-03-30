@@ -79,8 +79,8 @@ class CpuInfoPanel(FigureCanvasBasePanel):
         self.UpdatePlot()
 
     def OnCpuInfoEvent(self, evt):
-        print("data = ", evt.data)
-        print("labels = ", evt.labels)
+        # print("data = ", evt.data)
+        # print("labels = ", evt.labels)
         self.x = evt.labels
         self.y = list(map(float, evt.data))
         self.plot(self.x, self.y)

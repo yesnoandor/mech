@@ -63,7 +63,7 @@ class logger(logging.Logger):
             'CRITICAL': 'bold_red',
         }
 
-        super(logger, self).__init__( self.__filename)
+        super(logger, self).__init__(self.__filename)
 
         # 日志文件的输出格式
         file_formatter = logging.Formatter(
@@ -86,7 +86,7 @@ class logger(logging.Logger):
         # 创建一个handler，用于输出到控制台
         stream_handler = logging.StreamHandler()
         stream_handler.setFormatter(console_formatter)
-        stream_handler.setLevel(logging.DEBUG)
+        stream_handler.setLevel(logging.INFO)
 
         # 给logger添加handler
         self.addHandler(file_handler)

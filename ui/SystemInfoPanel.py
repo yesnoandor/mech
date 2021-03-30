@@ -41,6 +41,7 @@ Created on
 
 import wx
 from ui.MechIIEvent import *
+from utils.logger import SingleLogger
 
 
 class NodeInfoPanel(wx.Panel):
@@ -49,6 +50,9 @@ class NodeInfoPanel(wx.Panel):
     """
     def __init__(self, *args, **kwargs):
         super(NodeInfoPanel, self).__init__(*args, **kwargs)
+
+        # 初始化日志类
+        self.__logger = SingleLogger()
 
         self.sizer = wx.GridBagSizer(0, 0)
         self.SetSizer(self.sizer)
@@ -94,10 +98,15 @@ class NodeInfoPanel(wx.Panel):
         '''
 
     def OnNodeInfoEvent(self, evt):
-        print("hw = ", evt.hw)
-        print("sw = ", evt.sw)
-        print("ip = ", evt.ip)
-        print("uuid = ", evt.uuid)
+        # print("hw = ", evt.hw)
+        # print("sw = ", evt.sw)
+        # print("ip = ", evt.ip)
+        # print("uuid = ", evt.uuid)
+
+        self.__logger.debug("hw = {}".format(evt.hw))
+        self.__logger.debug("sw = {}".format(evt.sw))
+        self.__logger.debug("ip = {}".format(evt.ip))
+        self.__logger.debug("uuid = {}".format(evt.uuid))
 
         label = "HW Version : V%s" % evt.hw
         self.hw_version.SetLabelText(label)
@@ -113,6 +122,9 @@ class NodeInfoPanel(wx.Panel):
 class PerformanceInfoPanel(wx.Panel):
     def __init__(self, *args, **kwargs):
         super(PerformanceInfoPanel, self).__init__(*args, **kwargs)
+
+        # 初始化日志类
+        self.__logger = SingleLogger()
 
         self.sizer = wx.GridBagSizer(0, 0)
         self.SetSizer(self.sizer)
@@ -189,20 +201,25 @@ class PerformanceInfoPanel(wx.Panel):
         self.Bind(EVT_PERFORMANCE_INFO, self.OnPerformanceInfoEvent)
 
     def OnPerformanceInfoEvent(self, evt):
-        print("uptime = ", evt.uptime)
-        print("temperature = ", evt.temperature)
-        print("memory = ", evt.memory)
-        print("network total = ", evt.network)
-        print("cpu = ", evt.cpu)
+        # print("uptime = ", evt.uptime)
+        # print("temperature = ", evt.temperature)
+        # print("memory = ", evt.memory)
+        # print(type(evt.memory))
+        # print("network total = ", evt.network)
+        # print("cpu = ", evt.cpu)
+
+        self.__logger.debug("uptime = {}".format(evt.uptime))
+        self.__logger.debug("temperature = {}".format(evt.temperature))
+        self.__logger.debug("memory = {}".format(evt.memory))
+        self.__logger.debug("temperature = {}".format(evt.network))
+        self.__logger.debug("cpu = {}".format(evt.cpu))
 
         self.uptime_value.SetLabelText(evt.uptime)
         label = "%s ℃" % evt.temperature
         self.temperature_value.SetLabelText(label)
         label = "%s%%" % evt.memory
-        print("memory = ", label)
         self.memory_value.SetLabelText(label)
         label = "%sBps" % evt.network
-        print("network total = ", label)
         self.network_value.SetLabelText(label)
         label = "%s" % evt.cpu
         self.cpu_value.SetLabelText(label)

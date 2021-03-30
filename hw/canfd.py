@@ -138,12 +138,12 @@ class CanAnalyze_ZLG(CanAnalyze):
         # 获取CAN分析仪的设备信息,保存到私有变量self._canfd_devices_info中
         # self._canfd_devices_info = dict()
         self._canfd_devices_info = self.GetDevicesInfo()
-        print("canfd devices info = {}".format(self._canfd_devices_info))
+        # print("canfd devices info = {}".format(self._canfd_devices_info))
         # self._logger.info("canfd devices info = {}".format(self._canfd_devices_info))
         # self.Close(0)
 
-        for sn, can_info in self._canfd_devices_info.items():
-            print("%s : %d " % (sn, can_info['index']))
+        #for sn, can_info in self._canfd_devices_info.items():
+        #    print("%s : %d " % (sn, can_info['index']))
 
     def GetDevicesInfo(self):
         """
@@ -199,8 +199,8 @@ class CanAnalyze_ZLG(CanAnalyze):
                     "channel": {}
                 }
 
-                for inc in range(int(canfd_devices_info[sn]["chn"], 16)):
-                    canfd_devices_info[sn]["channel"][inc] = dict(init=False, receive=False)
+                # for inc in range(int(canfd_devices_info[sn]["chn"], 16)):
+                #    canfd_devices_info[sn]["channel"][inc] = dict(init=False, receive=False)
             except Exception as e:
                 print(e)
             #self._CloseDevice(0)
@@ -211,34 +211,6 @@ class CanAnalyze_ZLG(CanAnalyze):
 
         return canfd_devices_info
 
-        """
-        for num in range(0, can_num):
-            opened = False
-            for sn, can_info in self._canfd_devices_info.iteritems():
-                if can_info['device_index'] == num:
-                    opened = True
-                    break
-            if not opened:
-                self._OpenDevice(num, 0)
-            board_info = self._ReadBoardInfo(num)
-            sn = str()
-            for ch in board_info.sn:
-                sn += chr(ch)
-
-            canfd_devices_info[sn] = {
-                "device_index": num,
-                "hmv": hex(board_info.hmv),
-                "fwv": hex(board_info.fwv),
-                "drv": hex(board_info.drv),
-                "api": hex(board_info.api),
-                "irq": hex(board_info.irq),
-                "chn": hex(board_info.chn),
-                "channel": {}
-            }
-
-            for inc in range(int(canfd_devices_info[sn]["chn"], 16)):
-                canfd_devices_info[sn]["channel"][inc] = dict(init=False, receive=False)
-        """
 
     def ResetCAN(self):
         """
@@ -605,8 +577,6 @@ class CanAnalyze_ZLG(CanAnalyze):
 if __name__ == "__main__":
     # 改变当前工作目录到上一级目录
     os.chdir("../")
-    # 返回当前工作目录
-    print(os.getcwd())
 
     fd = CanAnalyze_ZLG(0x04cc, 0x1240)
     #fd = CanAnalyze_ZLG(0x3068, 0x0009)

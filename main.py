@@ -38,9 +38,9 @@ Created on
 
 """
 
-from queue import Queue
+
 import threading
-from utils.logger import logger
+from queue import Queue
 from utils.logger import SingleLogger
 from gaea.config import system_params
 from ui.MechIIApp import MechIIApp

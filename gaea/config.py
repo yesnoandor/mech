@@ -40,6 +40,7 @@ Created on
 
 import os
 import json
+import psutil
 from utils.json import *
 from utils.logger import SingleLogger
 from gaea.default import DEFAULT_SYSTEM_CONFIG
@@ -66,6 +67,20 @@ class system_params:
         except Exception as e:
             print(e)
             self._cfg = DEFAULT_SYSTEM_CONFIG
+
+        # 获取各个网卡的mac地址
+        self.__mac_dict = dict()
+        dic = psutil.net_if_addrs()
+        # print("dic = ", dic)
+        for adapter in dic:
+            # print("adapter = ", adapter)
+            sniclist = dic[adapter]
+            for snic in sniclist:
+                # print(type(snic))
+                # print("snic = ", snic)
+                # print(snic.address)
+                self.__mac_dict[adapter] = snic.address
+        # print(self.__mac_dict)
 
         # self.__logger.info('configuration = {}'.format(self._cfg))
 
@@ -172,6 +187,20 @@ class system_params:
         print("serial server protocol = %s" % self._cfg['serial_server']['protocol'])
         return self._cfg['serial_server']['protocol']
 
+    def get_eth_mac(self, eth_name):
+        """
+        获取已知网卡名的mac地址
+        :param eth_name:
+        :return:
+        """
+        return self.__mac_dict[eth_name] if eth_name in self.__mac_dict.keys() else ""
+
+    def get_license_eth(self):
+        return self._cfg['license']['eth']
+
+    def get_license_path(self):
+        return self._cfg['license']['path']
+
 
 if __name__ == '__main__':
     # 改变当前工作目录到上一级目录
@@ -213,4 +242,10 @@ if __name__ == '__main__':
     can_node_info['CAN1']['uuid'] = "1234"
     print("can_node_info = ", can_node_info)
 
+    license_eth = system_config.get_license_eth()
+    print("license_eth = ", license_eth)
+    license_path = system_config.get_license_path()
+    print("license_path = ", license_path)
+    mac = system_config.get_eth_mac(license_eth)
+    print("mac = ", mac)
     pass

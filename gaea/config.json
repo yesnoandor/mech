@@ -1,4 +1,9 @@
 {
+  "license": {
+    "eth": "enp0s31f6",
+    "path": "/home/wenyu/projects/mech-II/license"
+  },
+
   "module_server": {
     "ip": "",
     "port": 9999

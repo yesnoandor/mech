@@ -41,6 +41,7 @@ Created on
 import wx
 import time
 from pubsub import pub
+from license.check import license_verify
 
 
 class SplashViewer(wx.Frame):
@@ -63,6 +64,19 @@ class SplashViewer(wx.Frame):
 
         # 订阅消息
         pub.subscribe(self.UpdateUI, 'device_node_ready')
+
+        self.CheckLic()
+
+    def CheckLic(self):
+        status = license_verify()
+        if not status:
+            dlg = wx.MessageDialog(self, u"当前程序验证未通过，请联系伟创力客服", u"警告信息", wx.OK | wx.ICON_ERROR)
+
+            if dlg.ShowModal() == wx.ID_OK:
+                dlg.Close()
+            dlg.Destroy()
+            self.Destroy()
+            exit(0)
 
     def UpdateUI(self):
         # print("device node ready in SplashViewer")

@@ -258,7 +258,7 @@ if __name__ == '__main__':
     frame = MechIIViewer(devices_info=devices_info,
                          focus_device=focus_device,
                          focus_node=focus_node,
-                         parent=None, title='Mech-II', name="DemoFrame", style=wx.DEFAULT_FRAME_STYLE,
+                         parent=None, title='Mech-II v1.1', name="DemoFrame", style=wx.DEFAULT_FRAME_STYLE,
                          size=(1920, 1080))
     frame.Center()
     frame.Show()

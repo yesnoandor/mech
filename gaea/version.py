@@ -20,14 +20,14 @@
      | | :  `- \`.;`\ _ /`;.`/ - ` : | |
      \  \ `-.   \_ __\ /__ _/   .-` /  /
 ======`-.____`-.___\_____/___.-`____.-'======
-                   `=---='
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-         佛祖保佑       永无BUG
+                   `=---=' 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ 
+         佛祖保佑       永无BUG 
 
 '''
+  
 
-
-Created on
+Created on 
 
 
 @author: wenyu_xu
@@ -38,13 +38,11 @@ Created on
 
 """
 
+from utils import const
 
-from gaea.start import gaea_main
-
+const.VERSION_MAJOR = "1"
+const.VERSION_MINOR = "2"
+const.VERSION_PATCH = "0000"
 
 if __name__ == '__main__':
-    gaea_main()
-
-
-
-
+    pass

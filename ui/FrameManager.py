@@ -40,6 +40,7 @@ Created on
 
 
 import wx
+from gaea.version import *
 from hw.devices import DevicesInfo
 from ui.MechIIViewer import MechIIViewer
 from ui.SplashViewer import SplashViewer
@@ -66,13 +67,15 @@ class FrameManager:
 
     def CreateFrame(self, index):
         frame = None
+        title = "Mech-II" + "  v" + const.VERSION_MAJOR + '.' + const.VERSION_MINOR
+
         if index == 0:
             frame = SplashViewer(UpdateFrame=self.UpdateFrame,
-                                parent=None,
-                                title='Mech-II',
-                                name="Start Frame",
-                                style=wx.DEFAULT_FRAME_STYLE,
-                                size=(1920, 1080))
+                                 parent=None,
+                                 title=title,
+                                 name="Splash Frame",
+                                 style=wx.DEFAULT_FRAME_STYLE,
+                                 size=(1920, 1080))
 
         elif index == 1:
             devices_info = DevicesInfo()
@@ -85,7 +88,7 @@ class FrameManager:
                                  focus_node=focus_node,
                                  UpdateFrame=self.UpdateFrame,
                                  parent=None,
-                                 title='Mech-II',
+                                 title=title,
                                  name="Mech-II Frame",
                                  style=wx.DEFAULT_FRAME_STYLE,
                                  size=(1920, 1080))

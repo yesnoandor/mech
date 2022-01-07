@@ -65,7 +65,8 @@ class SplashViewer(wx.Frame):
         # 订阅消息
         pub.subscribe(self.UpdateUI, 'device_node_ready')
 
-        self.CheckLic()
+        # 验证License
+        # self.CheckLic()
 
     def CheckLic(self):
         status = license_verify()

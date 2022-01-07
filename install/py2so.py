@@ -17,14 +17,18 @@ __author__ = 'Arvin'
 
 """
 
-import sys, os, shutil, time
+import sys
+import os
+import shutil
+import time
 from distutils.core import setup
 from Cython.Build import cythonize
 
 starttime = time.time()
 setupfile= os.path.join(os.path.abspath('.'), __file__)
 
-def getpy(basepath=os.path.abspath('.'), parentpath='', name='', build_dir="build", 
+
+def getpy(basepath=os.path.abspath('.'), parentpath='', name='', build_dir="build",
           excepts=(), copyOther=False, delC=False):
     """
     获取py文件的路径
@@ -49,12 +53,12 @@ def getpy(basepath=os.path.abspath('.'), parentpath='', name='', build_dir="buil
                     os.remove(ffile)
             elif ffile not in excepts and ext not in('.pyc', '.pyx'):
                 # print("\t\t", basepath, parentpath, name, ffile)
-                if ext in('.py', '.pyx') and not fname.startswith('__'):
+                if ext in ('.py', '.pyx') and not fname.startswith('__'):
                     yield os.path.join(parentpath, name, fname)
                 elif copyOther:
-                        dstdir = os.path.join(basepath, build_dir, parentpath, name)
-                        if not os.path.isdir(dstdir): os.makedirs(dstdir)
-                        shutil.copyfile(ffile, os.path.join(dstdir, fname))
+                    dstdir = os.path.join(basepath, build_dir, parentpath, name)
+                    if not os.path.isdir(dstdir): os.makedirs(dstdir)
+                    shutil.copyfile(ffile, os.path.join(dstdir, fname))
         else:
             pass
 

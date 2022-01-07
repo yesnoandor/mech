@@ -63,7 +63,6 @@ class ModuleServerHandler(BaseRequestHandler):
     start_flag = False
     msg = bytearray()
 
-
     def setup(self):
         """
         每一个连接建立后的初始化

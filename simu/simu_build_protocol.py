@@ -49,7 +49,7 @@ from utils.bytes import *
 def build_heart_beat_bin(module_protocol):
     header = module_protocol.build_header(const.HEART_BEAT_UPLOAD, 0)
     heart_beat_bin = module_protocol.build_bin(header, b'')
-    print(heart_beat_bin)
+    # print(heart_beat_bin)
     return heart_beat_bin
 
 
@@ -118,7 +118,7 @@ def build_system_info_bin(module_protocol, start_time):
 
     # 填充模拟系统信息
     system_info['system']['version'] = {'sw': '2.3', 'hw': '1.0'}
-    system_info['system']['temperature'] = '37.9'
+    system_info['system']['temperature'] = int(random.randint(24, 90))
     system_info['system']['cpu'] = {'cpu0': str(cpu_utilization[0]), 'cpu1': str(cpu_utilization[1]),
                                     'cpu2': str(cpu_utilization[2]), 'cpu3': str(cpu_utilization[3]),
                                     'cpu4': str(cpu_utilization[4]), 'cpu5': str(cpu_utilization[5]),
@@ -128,8 +128,8 @@ def build_system_info_bin(module_protocol, start_time):
     system_info['system']['network']['rx'] = str(network_speed_rx)
     system_info['system']['uptime'] = "%d:%02d:%02d:%03d" % (hour, min, sec, ms)
     jsoninfo = json.dumps(system_info)
-    print(type(jsoninfo))
-    print(jsoninfo)
+    # print(type(jsoninfo))
+    # print(jsoninfo)
     body = jsoninfo.encode("utf-8")
     print("---------------------------------")
     print(body)

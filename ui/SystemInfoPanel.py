@@ -211,7 +211,7 @@ class PerformanceInfoPanel(wx.Panel):
         self.__logger.debug("uptime = {}".format(evt.uptime))
         self.__logger.debug("temperature = {}".format(evt.temperature))
         self.__logger.debug("memory = {}".format(evt.memory))
-        self.__logger.debug("temperature = {}".format(evt.network))
+        self.__logger.debug("network = {}".format(evt.network))
         self.__logger.debug("cpu = {}".format(evt.cpu))
 
         self.uptime_value.SetLabelText(evt.uptime)

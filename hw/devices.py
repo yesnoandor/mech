@@ -133,7 +133,7 @@ class DevicesInfo:
             DevicesInfo.__devices_name[device_name] = node_list
 
             # devices_info = {'#1': ['TC397-2222', 'H3-3333'], '#2': ['TC397-4444', 'H3-5555'],
-            #                '#3': ['TC397-5555', 'H3-6666']}
+            #                 '#3': ['TC397-5555', 'H3-6666']}
 
         # print(self.__devices_name)
         # return self.__devices_name

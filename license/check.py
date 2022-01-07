@@ -62,18 +62,16 @@ def mac_verify(mac):
 
 
 def date_verify(date):
+    c = ntplib.NTPClient()
     ntp_server_list = ['cn.ntp.org.cn', 'pool.ntp.org', 'cn.pool.ntp.org', 'ntp1.aliyun.com', 'ntp2.aliyun.com']
     for server in ntp_server_list:
         try:
-            c = ntplib.NTPClient()
             response = c.request(server)
-            ts = response.tx_time
-            print(ts)
             break
         except Exception as e:
             print("Exception server = ", server)
             print(e)
-        time.sleep(2)
+    ts = response.tx_time
     seconds = time.mktime(date.timetuple())
     diff = ts - seconds
     if diff > const.EXPIRATION:

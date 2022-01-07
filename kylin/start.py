@@ -43,7 +43,7 @@ import wx
 import threading
 from queue import Queue
 from utils.logger import SingleLogger
-from gaea.config import system_params
+from kylin.config import system_params
 from ui.MechIIApp import MechIIApp
 from server.ModuleServer import ModuleServerThread
 from server.CanServer import CANServerThread
@@ -63,12 +63,12 @@ def kylin_main():
     module_server_thread.start()
 
     # 创建CAN Server独立线程
-    system_config = system_params()
-    vid, pid = system_config.get_can_analyzer_info()
-    if vid != 0 and pid != 0:
-        single_logger.info("CAN Server Start...")
-        can_server_thread = CANServerThread("CANServer", queue, event)
-        can_server_thread.start()
+    # system_config = system_params()
+    # vid, pid = system_config.get_can_analyzer_info()
+    # if vid != 0 and pid != 0:
+    #    single_logger.info("CAN Server Start...")
+    #    can_server_thread = CANServerThread("CANServer", queue, event)
+    #    can_server_thread.start()
 
     app.MainLoop()
 

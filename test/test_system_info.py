@@ -68,7 +68,7 @@ def test_system_info():
 
         # 填充模拟系统信息
         system_info['version'] = {'sw': '2.3', 'hw': '1.0'}
-        system_info['temperature'] = '37.9'
+        system_info['temperature'] = str(random.randint(20, 105))
         system_info['cpu'] = {'cpu0': str(cpu_utilization[0]), 'cpu1': str(cpu_utilization[1]), 'cpu2': str(cpu_utilization[2]), 'cpu3': str(cpu_utilization[3]),
                               'cpu4': str(cpu_utilization[4]), 'cpu5': str(cpu_utilization[5]), 'cpu6': str(cpu_utilization[6]), 'cpu7': str(cpu_utilization[7])}
         system_info['memory'] = {'total': '2048M', 'used': random.choice(memory_utilization)}

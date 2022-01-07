@@ -64,7 +64,7 @@ class ModuleList(wx.ListCtrl):
         self.AddColumns()
 
         # 初始化私有变量
-        self._monitor_modules_list = {}             # 对应每个设备(uuid), 记录这个设备的每个module的名字和位置的对应关系
+        self._monitor_modules_list = {}               # 对应每个设备(uuid), 记录这个设备的每个module的名字和位置的对应关系
         # self._monitor_modules_log = {}              # 对应每个设备(uuid), 记录这个设备的每个module的名字和日志的对应关系
         # self._monitor_modules_max_state = {}        # 对应每个设备(uuid), 记录这个设备的每个module的名字和状态的对应关系
 

@@ -39,6 +39,7 @@ Created on
 """
 
 
+import os
 import wx
 import json
 import struct
@@ -73,6 +74,7 @@ const.SYSTEM_INFO_UPLOAD = 0x0100
 const.RTC_SYNC = 0x8004
 const.SETTING_DOWNLOAD = 0x8005
 
+const.JUNGO_PERSON_INFO_UPLOAD = 0x0062
 
 class ModuleProtocol:
     """
@@ -377,7 +379,7 @@ class ModuleProtocol:
         # print("parse_body_heart_beat::++++++++++++++++++++")
 
         devices_info = DevicesInfo()
-        if self.__uuid is "":
+        if self.__uuid == "":
             self.__uuid = '%02X' % self.vendor_id
             self.__uuid += '%02X' % self.product_id
             self.__uuid += bytesToHexString(self.serial_id)
@@ -509,6 +511,10 @@ class ModuleProtocol:
         if devices_info.get_uuid_from_ip(self.__ip) is None:
             devices_info.set_uuid(self.__ip, system_info['uuid'])
 
+    def parse_jungo_person_info(self, body):
+        body_dic = json.loads(body.decode("utf-8"))
+        print(body_dic)
+
     def parse_body_rtc_sync(self, body):
         print("body = ", body)
 
@@ -604,6 +610,9 @@ class ModuleProtocol:
                 # self.__logger.info("this is a system info package")
                 self.parse_body_system_info(data[16:-2])
                 return const.SYSTEM_INFO_UPLOAD
+            elif msg_id == const.JUNGO_PERSON_INFO_UPLOAD:
+                self.parse_body_jungo_person_info(data[16:-2])
+                return const.JUNGO_PERSON_INFO_UPLOAD
             elif msg_id == const.RTC_SYNC:
                 self.parse_body_rtc_sync(data[16:-2])
                 return const.RTC_SYNC
@@ -636,6 +645,9 @@ class ModuleProtocol:
 
 
 if __name__ == '__main__':
+    # 改变当前工作目录到上一级目录
+    os.chdir("../")
+
     """
     heart_beat = "7e 01 00 00 00 20 01 00 00 00 00 00 00 00 00 00 00 c7 74 7e"
     heart_beat_bin = hexStringTobytes(heart_beat)

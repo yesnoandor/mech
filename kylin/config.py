@@ -43,7 +43,7 @@ import json
 import psutil
 from utils.json import *
 from utils.logger import SingleLogger
-from gaea.default import DEFAULT_SYSTEM_CONFIG
+from kylin.default import DEFAULT_SYSTEM_CONFIG
 
 
 class system_params:

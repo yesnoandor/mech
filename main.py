@@ -29,7 +29,6 @@
 
 Created on
 
-
 @author: wenyu_xu
 @mail:wenyu__xu@163.com
 
@@ -40,10 +39,12 @@ Created on
 
 
 from gaea.start import gaea_main
+from kylin.start import kylin_main
 
 
 if __name__ == '__main__':
-    gaea_main()
+    # gaea_main()
+    kylin_main()
 
 
 

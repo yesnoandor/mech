@@ -113,11 +113,11 @@ class TabInfoPanel(wx.Panel):
         pass
 
     def onEnterWindow(self, evt):
-        print("onEnterWindow")
+        # print("onEnterWindow")
         print(evt.GetPosition())
         pos = evt.GetPosition()
         pos = self.ScreenToClient(pos)
-        print("pos = ", pos)
+        # print("pos = ", pos)
         self.main_popup_menu = MenuPopup(self)
         #self.PopupMenu(self.main_popup_menu, pos)
         self.PopupMenu(self.main_popup_menu, (1350, 60))

@@ -208,18 +208,18 @@ class DeviceInfoPanel(wx.Panel):
         self.nodes_panel = {}
 
         self.devices_status[evt.name] = (self.devices_status[evt.name] == False)
-        print("devices_status = ", self.devices_status)
+        # print("devices_status = ", self.devices_status)
 
         self.sizer = wx.BoxSizer(wx.VERTICAL)
 
         for device_name, nodes_name in self.devices_info.items():
-            print("device name = ", device_name)
+            # print("device name = ", device_name)
             if self.focus_device == device_name:
                 focus = True
             else:
                 focus = False
 
-            print("status = ", self.devices_status[device_name])
+            # print("status = ", self.devices_status[device_name])
             device_panel = DevicePanel(name=device_name, focus=focus, status=self.devices_status[device_name],
                                        parent=self)
 

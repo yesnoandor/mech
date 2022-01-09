@@ -8,5 +8,6 @@
 - pip3 install pycryptodome
 - pip3 install pyusb
 - pip3 install pyudev
+- pip3 install opencv-python
 
 ## 二. 配置参数
